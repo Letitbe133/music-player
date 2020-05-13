@@ -2,8 +2,8 @@
   <div>
     <h1>{{ title }}</h1>
     <section>
-      <h2>Now Playing : {{current.title}}</h2>
-      <p>By {{current.artist}}</p>
+      <h2>Now Playing : {{current.name}}</h2>
+      <p>By {{current.artistName}}</p>
       <div class="controls">
         <button @click="prev" :disabled="index <= 0">Prev</button>
         <button v-if="!isPlaying" @click="play">Play</button>
@@ -14,8 +14,8 @@
     <section>
       <h3>Playlist</h3>
       <div v-for="song in songs" :key="song.src">
-        <h4>Track : {{song.title}}</h4>
-        <p>Artist : {{song.artist}}</p>
+        <h4>Track : {{song.name}}</h4>
+        <p>Artist : {{song.artistName}}</p>
         <button @click="play(song)">Play</button>
       </div>
     </section>
@@ -34,41 +34,18 @@ export default {
       index: 0,
       isPlaying: false,
       //   All music courtesy of https://freemusicarchive.org/
-      songs: [
-        {
-          title: "Until We Get By",
-          artist: "Small Tall Order",
-          src: require("../assets/music/Until_We_Get_By.mp3")
-        },
-        {
-          title: "Brooklyn",
-          artist: "The Inventors",
-          src: require("../assets/music/The_Inventors_-_12_-_Brooklyn.mp3")
-        },
-        {
-          title: "Upbeat Party",
-          artist: "Scott Holmes",
-          src: require("../assets/music/Scott_Holmes_-_04_-_Upbeat_Party.mp3")
-        },
-        {
-          title: "Dog Soldier Stand Down",
-          artist: "Aglow Hollow",
-          src: require("../assets/music/Aglow_Hollow_-_04_-_Dog_Soldier___Stand_Down.mp3")
-        }
-      ],
+      songs: [],
       player: new Audio()
     };
   },
   created() {
-    this.current = this.songs[this.index];
-    this.player.src = this.current.src;
+    this.fetchSongs();
   },
   methods: {
     play(song) {
-      //   console.log(this.current.src);
-      if (typeof song.src !== "undefined") {
+      if (typeof song.previewURL !== "undefined") {
         this.current = song;
-        this.player.src = this.current.src;
+        this.player.src = this.current.previewURL;
       }
 
       this.isPlaying = true;
@@ -82,7 +59,7 @@ export default {
     prev() {
       this.index <= 0 ? (this.index = 0) : this.index--;
       this.current = this.songs[this.index];
-      this.player.src = this.current.src;
+      this.player.src = this.current.previewURL;
       this.isPlaying = true;
       this.player.play();
     },
@@ -92,9 +69,20 @@ export default {
         : this.index++;
       console.log(this.index);
       this.current = this.songs[this.index];
-      this.player.src = this.current.src;
+      this.player.src = this.current.previewURL;
       this.isPlaying = true;
       this.player.play();
+    },
+    fetchSongs() {
+      fetch(
+        "https://api.napster.com/v2.1/tracks/top?apikey=Mzc4OTU3NjMtYjExOS00ZmE3LTg3ZTYtZDBkYjBjMjg2Nzc4"
+      )
+        .then(res => res.json())
+        .then(data => {
+          this.songs = data.tracks;
+          this.current = this.songs[this.index];
+          this.player.src = this.current.previewURL;
+        });
     }
   }
 };
