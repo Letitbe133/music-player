@@ -4,6 +4,9 @@
     <section>
       <h2>Now Playing : {{current.title}}</h2>
       <p>By {{current.artist}}</p>
+      <!-- <audio controls>
+        <source src="../assets/music/Until_We_Get_By.mp3" type="audio/mpeg" />
+      </audio>-->
       <div class="controls">
         <button @click="prev" :disabled="index <= 0">Prev</button>
         <button v-if="!isPlaying" @click="play">Play</button>
@@ -57,9 +60,11 @@ export default {
         }
       ],
       player: new Audio()
+      // player: ""
     };
   },
-  created() {
+  mounted() {
+    // this.player = document.querySelector("audio");
     this.current = this.songs[this.index];
     this.player.src = this.current.src;
   },
@@ -90,7 +95,6 @@ export default {
       this.index >= this.songs.length
         ? (this.index = this.songs.length - 1)
         : this.index++;
-      console.log(this.index);
       this.current = this.songs[this.index];
       this.player.src = this.current.src;
       this.isPlaying = true;
