@@ -4,9 +4,11 @@
     <section>
       <h2>Now Playing : {{current.title}}</h2>
       <p>By {{current.artist}}</p>
+
       <!-- <audio controls>
         <source src="../assets/music/Until_We_Get_By.mp3" type="audio/mpeg" />
       </audio>-->
+
       <div class="controls">
         <button @click="prev" :disabled="index <= 0">Prev</button>
         <button v-if="!isPlaying" @click="play">Play</button>
@@ -36,7 +38,9 @@ export default {
       current: {},
       index: 0,
       isPlaying: false,
+
       //   All music courtesy of https://freemusicarchive.org/
+
       songs: [
         {
           title: "Until We Get By",
@@ -65,12 +69,12 @@ export default {
   },
   mounted() {
     // this.player = document.querySelector("audio");
+
     this.current = this.songs[this.index];
     this.player.src = this.current.src;
   },
   methods: {
     play(song) {
-      //   console.log(this.current.src);
       if (typeof song.src !== "undefined") {
         this.current = song;
         this.player.src = this.current.src;
@@ -86,19 +90,20 @@ export default {
     },
     prev() {
       this.index <= 0 ? (this.index = 0) : this.index--;
-      this.current = this.songs[this.index];
-      this.player.src = this.current.src;
-      this.isPlaying = true;
-      this.player.play();
+      this.setCurrentSong();
+      this.play(this.current);
     },
     next() {
       this.index >= this.songs.length
         ? (this.index = this.songs.length - 1)
         : this.index++;
+      this.setCurrentSong();
+      this.play(this.current);
+    },
+    setCurrentSong() {
       this.current = this.songs[this.index];
       this.player.src = this.current.src;
       this.isPlaying = true;
-      this.player.play();
     }
   }
 };
