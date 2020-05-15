@@ -103,7 +103,6 @@ export default {
     setCurrentSong() {
       this.current = this.songs[this.index];
       this.player.src = this.current.src;
-      this.isPlaying = true;
     }
   }
 };
