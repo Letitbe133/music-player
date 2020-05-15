@@ -49,7 +49,6 @@ export default {
       }
 
       this.isPlaying = true;
-
       this.player.play();
     },
     pause() {
@@ -58,25 +57,23 @@ export default {
     },
     prev() {
       this.index <= 0 ? (this.index = 0) : this.index--;
-      this.current = this.songs[this.index];
-      this.player.src = this.current.previewURL;
-      this.isPlaying = true;
-      this.player.play();
+      this.setCurrentSong();
+      this.play(this.current);
     },
     next() {
       this.index >= this.songs.length
         ? (this.index = this.songs.length - 1)
         : this.index++;
-      console.log(this.index);
+      this.setCurrentSong();
+      this.play(this.current);
+    },
+    setCurrentSong() {
       this.current = this.songs[this.index];
-      this.player.src = this.current.previewURL;
-      this.isPlaying = true;
-      this.player.play();
+      this.player.src = this.current.src;
     },
     fetchSongs() {
-      fetch(
-        "https://api.napster.com/v2.1/tracks/top?apikey=Mzc4OTU3NjMtYjExOS00ZmE3LTg3ZTYtZDBkYjBjMjg2Nzc4"
-      )
+      // napster api url : https://developer.napster.com/developer
+      fetch("https://api.napster.com/v2.1/tracks/top?apikey={YOUR_API_KEY}")
         .then(res => res.json())
         .then(data => {
           this.songs = data.tracks;
