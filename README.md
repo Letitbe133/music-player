@@ -1,6 +1,6 @@
 # song_player
 
-This project was built for educational purpose only as an introcuction to Vue.js framework <3
+This project was built for educational purpose only as an introcuction to [Vue.js](https://vuejs.org/) framework <3
 
 ## Project setup
 
